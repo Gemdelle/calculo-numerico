@@ -121,6 +121,17 @@ def main():
     except Exception as e:
         print(f"(a) Error: {e}\n")
 
+    # Caso b) intervalo [1.5, 2.5]
+    try:
+        start = time.time()
+        root_b, iter_b = bisection(f, 1.5, 2.5, EPS)
+        end = time.time()
+        print(f"(b) Raíz aproximada: {root_b:.9f}")
+        print(f"    Iteraciones: {iter_b}")
+        print(f"    Tiempo: {end - start:.9f} segundos\n")
+    except Exception as e:
+        print(f"(b) Error: {e}\n")
+
     # Graficar la función con las raíces e intervalos encontrados
     plot_function(roots=roots, intervals=intervals)
 
