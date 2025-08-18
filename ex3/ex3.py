@@ -90,7 +90,7 @@ def plot_function(roots=None, intervals=None):
     if roots:
         for root in roots:
             if root is not None:
-                plt.plot(root, 0, 'go', label='Raíz')
+                plt.plot(root, 0, 'go', label=f'Raíz = {root:.2f}')
     
     # Agregar intervalos si existen
     if intervals:
