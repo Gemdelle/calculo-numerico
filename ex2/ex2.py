@@ -27,13 +27,8 @@ def f3(x: float) -> float:
 
 
 def main() -> None:
-    if len(sys.argv) != 2:
-        print(f"Uso: python {sys.argv[0]} <precision_exponente>")
-        print("Ejemplo: python ex2.py 5  (para precisión 1e-5)")
-        sys.exit(1)
-
     try:
-        prec_exp = int(sys.argv[1])
+        prec_exp = int(input("Ingrese un exponente p entre 1 y 15 (para 10^-p): "))
         if not (1 <= prec_exp <= 15):
             raise ValueError
     except ValueError:
