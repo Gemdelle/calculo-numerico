@@ -113,7 +113,7 @@ def secant_method(
 			return x2, n, rows
 		x0, f0 = x1, f1
 		x1, f1 = x2, f(x2)
-	return x2, n-1, rows
+	return x1, n, rows
 
 
 # =============================================================================
