@@ -1,105 +1,33 @@
 """
-Ejercicio 6: Implementación y Comparación de Métodos Numéricos
-=============================================================
+Unidad 2: Raíces de ecuaciones no lineales — Ejercicio 6
+========================================================
 
-Este programa implementa y compara los métodos de Newton-Raphson y Secante
-para encontrar raíces de funciones no lineales. Se analizan dos problemas:
+Consigna:
+- Aproxime con 10^{-4} de precisión las siguientes ecuaciones siguiendo el método de Newton,
+  y compare con los resultados del método de la secante. Obtenga resultados con un esquema gráfico
+  y reprodúzcalos con un programa.
 
-Problema 1: f(x) = x - cos(x)
-Problema 2: f(x) = x³ + 3x² - 1
+  1) x − cos(x) = 0   con [0, π/2]     Respuesta: p0 = 0.7854, p3 = 0.7390851
+  2) x^3 + 3x^2 − 1 = 0   en [−4, 0]   Respuesta: p0 = −1, p3 = −0.65270365
 
-Para cada problema, se calculan las raíces usando ambos métodos y se visualizan:
-- La función y las raíces encontradas
-- La convergencia de cada método
-- Tablas con los resultados numéricos
+Este programa implementa y compara Newton y Secante, imprime tablas de iteraciones y genera gráficos
+de la función con raíces y de la convergencia de los métodos.
 """
 
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+try:
+	from common_functions import newton_method, secant_method, print_iteration_table
+except ImportError:
+	import os as _os
+	import sys as _sys
+	_sys.path.append(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+	from common_functions import newton_method, secant_method, print_iteration_table
 
 # Configuración general
 TOLERANCE = 1e-4  # Tolerancia para convergencia
 MAX_ITERATIONS = 50  # Máximo número de iteraciones permitidas
-
-
-def newton(f, df, p0, tol=TOLERANCE, max_iter=MAX_ITERATIONS):
-    """
-    Implementa el método de Newton-Raphson para encontrar raíces.
-
-    Argumentos:
-        f (function): La función cuya raíz se busca
-        df (function): La derivada de la función f
-        p0 (float): Punto inicial para comenzar la búsqueda
-        tol (float): Tolerancia para el criterio de convergencia
-        max_iter (int): Número máximo de iteraciones permitidas
-
-    Retorna:
-        tuple: (raíz encontrada, número de iteraciones, historial de iteraciones)
-    """
-    rows = []  # Almacena el historial de iteraciones
-    p = p0
-    rows.append((0, p, f(p)))  # Guarda el punto inicial
-
-    for n in range(1, max_iter + 1):
-        fp = f(p)
-        dfp = df(p)
-
-        # Verifica si la derivada es cero para evitar división por cero
-        if dfp == 0:
-            break
-
-        # Calcula el siguiente punto usando la fórmula de Newton
-        p_new = p - fp / dfp
-        rows.append((n, p_new, f(p_new), abs(p_new - p)))
-
-        # Verifica convergencia
-        if abs(p_new - p) < tol:
-            return p_new, n, rows
-
-        p = p_new
-
-    return p, n, rows
-
-
-def secant(f, x0, x1, tol=TOLERANCE, max_iter=MAX_ITERATIONS):
-    """
-    Implementa el método de la Secante para encontrar raíces.
-
-    Argumentos:
-        f (function): La función cuya raíz se busca
-        x0 (float): Primer punto inicial
-        x1 (float): Segundo punto inicial
-        tol (float): Tolerancia para el criterio de convergencia
-        max_iter (int): Número máximo de iteraciones permitidas
-
-    Retorna:
-        tuple: (raíz encontrada, número de iteraciones, historial de iteraciones)
-    """
-    rows = []  # Almacena el historial de iteraciones
-    f0 = f(x0)
-    f1 = f(x1)
-    rows.append((0, x0, f0))  # Guarda el primer punto inicial
-    rows.append((1, x1, f1))  # Guarda el segundo punto inicial
-
-    for n in range(2, max_iter + 1):
-        # Verifica si la pendiente es cero para evitar división por cero
-        if (f1 - f0) == 0:
-            break
-
-        # Calcula el siguiente punto usando la fórmula de la Secante
-        x2 = x1 - f1 * (x1 - x0) / (f1 - f0)
-        rows.append((n, x2, f(x2), abs(x2 - x1)))
-
-        # Verifica convergencia
-        if abs(x2 - x1) < tol:
-            return x2, n, rows
-
-        # Actualiza los puntos para la siguiente iteración
-        x0, f0 = x1, f1
-        x1, f1 = x2, f(x2)
-
-    return x1, n, rows
 
 
 def plot_function_and_roots(f, x_range, roots, methods, iterations, title, problem_num):
@@ -204,25 +132,8 @@ def plot_convergence(rows_newton, rows_secant, title, problem_num):
     plt.show()
 
 def print_table(title, rows):
-    """
-    Imprime una tabla formateada con los resultados de las iteraciones.
-
-    Argumentos:
-        title (str): Título de la tabla
-        rows (list): Lista de tuplas con los datos de cada iteración
-    """
-    print("\n" + title)
-    print(f"{'n':>2} {'x':>14} {'f(x)':>15} {'delta':>12}")
-    print("-" * 45)  # Línea separadora
-
-    for r in rows:
-        if len(r) == 3:
-            # Primera iteración (sin delta)
-            print(f"{r[0]:2d} {r[1]:14.7f} {r[2]:15.7e} {'':12}")
-        else:
-            # Iteraciones subsiguientes (con delta)
-            print(f"{r[0]:2d} {r[1]:14.7f} {r[2]:15.7e} {r[3]:12.7e}")
-    print("-" * 45)  # Línea separadora
+    # Mantener compatibilidad pero delegar al helper común
+    print_iteration_table(title, rows)
 
 
 # =============================================================================
@@ -280,10 +191,10 @@ def solve_and_plot(problem, problem_num):
         problem_num: Número del problema para los títulos
     """
     # Resolver usando el método de Newton
-    root_n, it_n, tab_n = newton(problem.f, problem.df, problem.newton_p0)
+    root_n, it_n, tab_n = newton_method(problem.f, problem.df, problem.newton_p0, tol=TOLERANCE, max_iter=MAX_ITERATIONS)
 
     # Resolver usando el método de la Secante
-    root_s, it_s, tab_s = secant(problem.f, problem.secant_x0, problem.secant_x1)
+    root_s, it_s, tab_s = secant_method(problem.f, problem.secant_x0, problem.secant_x1, tol=TOLERANCE, max_iter=MAX_ITERATIONS)
 
     # Mostrar resultados en tablas
     print_table(f"Newton: {problem.title}, p0={problem.newton_p0}", tab_n)

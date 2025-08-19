@@ -1,40 +1,35 @@
+"""
+Unidad 2: Raíces de ecuaciones no lineales — Ejercicio 2
+========================================================
+
+Consigna:
+- Determine cuántas iteraciones son necesarias para resolver x^3 + 4x^2 − 10 = 0
+  con una precisión ε = 10^{-5}. Respuesta: 17 iteraciones.
+- Hacer el ejercicio y reproducirlo con el programa.
+
+Este script aplica bisección en [1, 2] y muestra la tabla de iteraciones.
+"""
+
 import time
 import sys
 
+try:
+	from common_functions import bisection_method, print_bisection_table
+except ImportError:
+	import os as _os
+	import sys as _sys
+	_sys.path.append(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+	from common_functions import bisection_method, print_bisection_table
 
-def f3(x):
+
+def f3(x: float) -> float:
     return x**3 + 4 * x**2 - 10
 
 
-def bisection(func, a, b, tol, label):
-    iter_count = 0
-    print(f"{label}) Tabla de iteraciones")
-    print(
-        f"{'Iter':>4} | {'a':>17} | {'b':>17} | {'p=(a+b)/2':>17} | {'f(p)':>20} | {'(b-a)/2':>17}"
-    )
-    print("-" * 105)
-    while True:
-        c = (a + b) / 2.0
-        fc = func(c)
-        iter_count += 1
-
-        print(
-            f"{iter_count:4d} | {a:17.15f} | {b:17.15f} | {c:17.15f} | {fc:20.15e} | {(b - a) / 2:17.15f}"
-        )
-
-        if fc == 0 or (b - a) / 2 <= tol:
-            break
-        if func(a) * fc < 0:
-            b = c
-        else:
-            a = c
-    return c, iter_count
-
-
-def main():
+def main() -> None:
     if len(sys.argv) != 2:
         print(f"Uso: python {sys.argv[0]} <precision_exponente>")
-        print("Ejemplo: python script.py 5  (para precisión 1e-5)")
+        print("Ejemplo: python ex2.py 5  (para precisión 1e-5)")
         sys.exit(1)
 
     try:
@@ -47,13 +42,13 @@ def main():
 
     EPS = 10 ** (-prec_exp)
 
-    # Intervalo para la raíz de f3, suponemos entre 1 y 2 (porque f(1) = 1 + 4 - 10 = -5 < 0 y f(2) = 8 + 16 - 10 = 14 > 0)
     a3, b3 = 1.0, 2.0
-
-    print("\nc) Bisección para f3 (x³ + 4x² - 10 = 0):\n")
+    print("\nBisección para f3 (x³ + 4x² - 10 = 0):\n")
     start = time.time()
-    root3, iter3 = bisection(f3, a3, b3, EPS, "c")
+    root3, iter3, history = bisection_method(f3, a3, b3, tol=EPS, max_iter=1000, capture_history=True)
     end = time.time()
+    if history is not None:
+        print_bisection_table("c", history)
     print(f"\nRaíz encontrada: {root3:.9f}")
     print(f"Iteraciones: {iter3}")
     print(f"Tiempo de ejecución: {end - start:.9f} segundos")
