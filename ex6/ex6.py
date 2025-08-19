@@ -106,11 +106,11 @@ def plot_convergence(rows_newton, rows_secant, title, problem_num):
             # Calcula el error como la diferencia entre iteraciones consecutivas
             errors_secant.append(abs(row[1] - rows_secant[i-1][1]))
 
-    # Grafica los errores en escala logarítmica
-    plt.semilogy(n_newton[1:], errors_newton, 'bo-',
-                 label=f'Newton (convergencia en {len(errors_newton)} pasos)')
-    plt.semilogy(n_secant[1:], errors_secant, 'ro-',
-                 label=f'Secante (convergencia en {len(errors_secant)} pasos)')
+    # Grafica los errores en escala logarítmica (omitir la iteración 0)
+    plt.semilogy(n_newton[1:], errors_newton[1:], 'bo-',
+                 label=f'Newton (convergencia en {len(errors_newton) - 1} pasos)')
+    plt.semilogy(n_secant[1:], errors_secant[1:], 'ro-',
+                 label=f'Secante (convergencia en {len(errors_secant) - 1} pasos)')
 
     # Configura la apariencia del gráfico
     plt.grid(True, alpha=0.3)
