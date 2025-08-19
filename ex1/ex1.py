@@ -40,10 +40,10 @@ def bisection(func, a, b, tol, label):
 
         if fc == 0 or (b - a) / 2 <= tol:
             break
-        if fc < 0:
-            a = c
-        else:
+        if func(a) * fc < 0:
             b = c
+        else:
+            a = c
     return c, iter_count
 
 

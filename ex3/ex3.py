@@ -45,51 +45,51 @@ def plot_function(roots=None, intervals=None):
     # Crear puntos para graficar
     x_left = np.linspace(-14, 1.9, 1000)  # Puntos a la izquierda de la asíntota
     x_right = np.linspace(2.1, 20, 1000)  # Puntos a la derecha de la asíntota
-    
+
     # Calcular valores para ambos lados de la asíntota
     y_left = []
     y_right = []
-    
+
     for xi in x_left:
         try:
             yi = f(xi)
             y_left.append(yi)
         except ValueError:
             y_left.append(np.nan)
-            
+
     for xi in x_right:
         try:
             yi = f(xi)
             y_right.append(yi)
         except ValueError:
             y_right.append(np.nan)
-    
+
     # Crear la gráfica
     plt.figure(figsize=(12, 8))
     plt.plot(x_left, y_left, 'r-', label='f(x)')
     plt.plot(x_right, y_right, 'r-')
-    
+
     # Ajustar límites y escala
     plt.xlim(-14, 20)
     plt.ylim(-6, 10)
-    
+
     # Agregar ejes y cuadrícula
     plt.axhline(y=0, color='k', linestyle='-', alpha=0.3)
     plt.axvline(x=0, color='k', linestyle='-', alpha=0.3)
     plt.axvline(x=2, color='r', linestyle='--', label='Asíntota (x=2)')
     plt.grid(True, alpha=0.3)
-    
+
     # Agregar raíces si existen
     if roots:
         for root in roots:
             if root is not None:
                 plt.plot(root, 0, 'go', label=f'Raíz = {root:.2f}')
-    
+
     # Agregar intervalos si existen
     if intervals:
         for a, b in intervals:
             plt.axvspan(a, b, alpha=0.2, color='gray')
-    
+
     plt.grid(True)
     plt.legend()
     plt.title('Gráfica de f(x) = (4x - 7)/(x - 2)²')

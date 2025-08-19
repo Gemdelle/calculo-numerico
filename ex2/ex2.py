@@ -1,12 +1,10 @@
 import time
 import sys
 
-"""
-Ej 2: Determine cuantas iteraciones son necesarias para resolver x^3 + 4x^2 - 10 = 0 con una precisión ε=10^-5   Respuesta con 17 iteraciones.
-"""
 
 def f3(x):
     return x**3 + 4 * x**2 - 10
+
 
 def bisection(func, a, b, tol, label):
     iter_count = 0
@@ -26,21 +24,21 @@ def bisection(func, a, b, tol, label):
 
         if fc == 0 or (b - a) / 2 <= tol:
             break
-        if fc < 0:
-            a = c
-        else:
+        if func(a) * fc < 0:
             b = c
+        else:
+            a = c
     return c, iter_count
 
 
 def main():
-    # if len(sys.argv) != 2:
-    #     print(f"Uso: python {sys.argv[0]} <precision_exponente>")
-    #     print("Ejemplo: python script.py 5  (para precisión 1e-5)")
-    #     sys.exit(1)
+    if len(sys.argv) != 2:
+        print(f"Uso: python {sys.argv[0]} <precision_exponente>")
+        print("Ejemplo: python script.py 5  (para precisión 1e-5)")
+        sys.exit(1)
 
     try:
-        prec_exp = int(input("Ingrese un exponente entre 1 y 15: "))
+        prec_exp = int(sys.argv[1])
         if not (1 <= prec_exp <= 15):
             raise ValueError
     except ValueError:
